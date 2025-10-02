@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Palindrome Checker</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:40px;}
+    .card{max-width:620px;margin:0 auto;padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+    label{display:block;margin-bottom:8px;font-weight:600}
+    input{width:100%;padding:10px 12px;font-size:16px;border:1px solid #d0d7de;border-radius:8px}
+    button{margin-top:12px;padding:10px 14px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+    #result{margin-top:16px;font-size:16px}
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <h1>Palindrome Checker</h1>
+    <label for="text-input">Enter text to check</label>
+    <input id="text-input" type="text" placeholder="Type something..." aria-label="Text to check" />
+    <button id="check-btn" type="button">Check</button>
+    <p id="result" aria-live="polite"></p>
+    <p style="font-size:13px;color:#555;margin-top:8px">(Non-alphanumeric characters are ignored; case is ignored.)</p>
+  </main>
+
+  <script>
+    // Helper: normalize by removing non-alphanumeric characters and lowercasing
+    function normalize(str) {
+      return str.replace(/[^0-9a-z]/gi, '').toLowerCase();
+    }
+
+    function isPalindrome(str) {
+      const norm = normalize(str);
+      // compare with reversed
+      const rev = norm.split('').reverse().join('');
+      return norm === rev;
+    }
+
+    const input = document.getElementById('text-input');
+    const btn = document.getElementById('check-btn');
+    const resultEl = document.getElementById('result');
+
+    function showResult() {
+      const original = input.value;
+      // If the user didn't enter any visible characters (after trimming), alert
+      if (original.trim().length === 0) {
+        alert('Please input a value');
+        return;
+      }
+
+      const pal = isPalindrome(original);
+      // Match the exact phrasing required by the user stories
+      resultEl.textContent = `${original} is${pal ? '' : ' not'} a palindrome`;
+    }
+
+    btn.addEventListener('click', showResult);
+
+    // Also allow Enter key to trigger the check
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        showResult();
+      }
+    });
+
+    // optional: clear result when user modifies input
+    input.addEventListener('input', function(){
+      if (resultEl.textContent) resultEl.textContent = '';
+    });
+  </script>
+</body>
+</html>
